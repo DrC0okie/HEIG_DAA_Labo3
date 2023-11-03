@@ -1,9 +1,5 @@
 <resources>
     <string name="app_name">Labo3</string>
-
-
-    <string name="app_name">Labo 2</string>
-
     <string name="main_base_title">Données de base</string>
     <string name="main_base_name_title">Nom</string>
     <string name="main_base_firstname_title">Prénom</string>
@@ -81,6 +77,4 @@
 
     <string name="btn_cancel">@android:string/cancel</string>
     <string name="btn_ok">@android:string/ok</string>
-
-
 </resources>
