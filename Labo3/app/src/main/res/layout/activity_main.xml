@@ -125,7 +125,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:entries="@array/nationalities"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/edit_text_birthdate" />
@@ -150,12 +150,14 @@
             app:layout_constraintTop_toBottomOf="@id/text_view_occupation">
 
             <RadioButton
+                android:id="@+id/radio_button_student"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/main_base_occupation_student" />
 
             <RadioButton
+                android:id="@+id/radio_button_worker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/main_base_occupation_worker" />
@@ -175,6 +177,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:text="@string/main_specific_students_title"
             android:textAllCaps="true"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -230,8 +233,8 @@
             android:id="@+id/group_student"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:constraint_referenced_ids="text_view_student_school, edit_text_student_school, text_view_student_graduationyear, edit_text_student_graduationyear, text_view_specific_data_student" />
+            tools:visibility="gone"
+            app:constraint_referenced_ids="text_view_specific_data_student,text_view_student_school,edit_text_student_school,text_view_student_graduationyear,edit_text_student_graduationyear" />
 
         <TextView
             android:id="@+id/text_view_specific_data_worker"
@@ -314,7 +317,7 @@
             android:id="@+id/group_worker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            tools:visibility="visible"
             app:constraint_referenced_ids="text_view_specific_data_worker, text_view_worker_company, edit_text_worker_company, text_view_worker_sector, spinner_worker_sector, text_view_worker_experience, edit_text_worker_experience" />
 
         <androidx.constraintlayout.widget.Barrier
