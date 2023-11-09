@@ -6,7 +6,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
 import ch.heigvd.daa.labo3.databinding.ActivityMainBinding
-import java.time.LocalDate
+import ch.heigvd.daa.labo3.model.Person
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,8 +16,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        binding.radioGroupOccupation.clearCheck()
         setClickListeners()
-        setDefaultValues()
     }
 
     private fun setClickListeners() {
@@ -49,30 +49,54 @@ class MainActivity : AppCompatActivity() {
                 //TODO
             }
             radioGroupOccupation.setOnCheckedChangeListener { _, _ ->
-                setGroupVisibility()
+                setGroup()
             }
         }
     }
 
-    private fun setDefaultValues() {
-        with(binding) {
-            radioGroupOccupation.clearCheck()
-            editTextBirthdate.setText(LocalDate.now().toString())
+    private fun setStudentDefault(){
+        val student = Person.exampleStudent
+        setPersonDefault(student)
+        with(binding){
+            editTextStudentSchool.setText(student.university)
+            editTextStudentGraduationyear.setText(student.graduationYear)
         }
     }
 
-    private fun setGroupVisibility() {
-        with(binding) {
+    private fun setWorkerDefault(){
+        val worker = Person.exampleWorker
+        setPersonDefault(worker)
+        with(binding){
+            editTextWorkerCompany.setText(worker.company)
+            //spinnerWorkerSector
+            editTextWorkerExperience.setText(worker.experienceYear)
+        }
+    }
 
+    private fun setPersonDefault(person: Person){
+        with(binding){
+            editTextName.setText(person.firstName)
+            editTextSurname.setText(person.name)
+            editTextBirthdate.setText(Person.dateFormatter.format(person.birthDay.time))
+            //spinnerNationality
+            editTextEmail.setText(person.email)
+            editTextComments.setText(person.remark)
+        }
+    }
+
+    private fun setGroup() {
+        with(binding) {
             when (radioGroupOccupation.checkedRadioButtonId) {
                 radioButtonStudent.id -> {
                     groupStudent.visibility = VISIBLE
                     groupWorker.visibility = GONE
+                    setStudentDefault()
                 }
 
                 radioButtonWorker.id -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = VISIBLE
+                    setWorkerDefault()
                 }
 
                 else -> {
