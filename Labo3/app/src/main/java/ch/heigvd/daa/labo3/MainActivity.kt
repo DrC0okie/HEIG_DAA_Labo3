@@ -1,25 +1,30 @@
 package ch.heigvd.daa.labo3
 
 import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
+import androidx.annotation.RequiresApi
 import ch.heigvd.daa.labo3.databinding.ActivityMainBinding
 import ch.heigvd.daa.labo3.model.Person
+import java.time.LocalDate
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        initAdapters()
+
         setClickListeners()
-        initRadioButtons()
+        binding.radioGroupOccupation.clearCheck()
+        initUI()
     }
 
     private fun setClickListeners() {
@@ -52,10 +57,6 @@ class MainActivity : AppCompatActivity() {
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
-    }
-
-    private fun initRadioButtons(){
-        binding.radioGroupOccupation.clearCheck()
     }
 
     private fun initAdapters(){
@@ -110,6 +111,15 @@ class MainActivity : AppCompatActivity() {
                     groupWorker.visibility = GONE
                 }
             }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun initUI(){
+        initAdapters()
+        setGroupVisibility(0)
+        with(binding){
+            editTextBirthdate.setText(LocalDate.now().toString())
         }
     }
 
