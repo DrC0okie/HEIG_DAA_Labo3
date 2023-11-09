@@ -153,13 +153,14 @@
                 android:id="@+id/radio_button_student"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="true"
+                android:checked="false"
                 android:text="@string/main_base_occupation_student" />
 
             <RadioButton
                 android:id="@+id/radio_button_worker"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="false"
                 android:text="@string/main_base_occupation_worker" />
         </RadioGroup>
 
@@ -286,7 +287,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:entries="@array/sectors"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/edit_text_worker_company" />
