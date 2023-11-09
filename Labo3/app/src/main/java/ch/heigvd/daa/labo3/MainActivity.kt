@@ -1,5 +1,6 @@
 package ch.heigvd.daa.labo3
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
@@ -16,23 +17,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        binding.radioGroupOccupation.clearCheck()
+        initAdapters()
         setClickListeners()
+        initRadioButtons()
     }
 
     private fun setClickListeners() {
 
         with(binding) {
-
-            ArrayAdapter.createFromResource(
-                this@MainActivity,
-                R.array.nationalities,
-                android.R.layout.simple_spinner_item
-            ).also { adapter ->
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-                spinnerNationality.adapter = adapter
-            }
-
             imageButtonCake.setOnClickListener {
                 //TODO : Material Datepicker (make a function)
             }
@@ -48,33 +40,50 @@ class MainActivity : AppCompatActivity() {
             buttonSave.setOnClickListener {
                 //TODO
             }
-            radioGroupOccupation.setOnCheckedChangeListener { _, _ ->
-                setGroup()
+            radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
+                setGroupVisibility(checkedId)
             }
         }
     }
 
-    private fun setStudentDefault(){
+    private fun getSpinnerAdapter(resource: Int, context: Context): ArrayAdapter<CharSequence> {
+        return ArrayAdapter.createFromResource(
+            context, resource, android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
+    }
+
+    private fun initRadioButtons(){
+        binding.radioGroupOccupation.clearCheck()
+    }
+
+    private fun initAdapters(){
+        binding.spinnerNationality.adapter = getSpinnerAdapter(R.array.nationalities, this)
+        binding.spinnerWorkerSector.adapter = getSpinnerAdapter(R.array.sectors, this)
+    }
+
+    private fun setStudentDefault() {
         val student = Person.exampleStudent
         setPersonDefault(student)
-        with(binding){
+        with(binding) {
             editTextStudentSchool.setText(student.university)
             editTextStudentGraduationyear.setText(student.graduationYear)
         }
     }
 
-    private fun setWorkerDefault(){
+    private fun setWorkerDefault() {
         val worker = Person.exampleWorker
         setPersonDefault(worker)
-        with(binding){
+        with(binding) {
             editTextWorkerCompany.setText(worker.company)
             //spinnerWorkerSector
             editTextWorkerExperience.setText(worker.experienceYear)
         }
     }
 
-    private fun setPersonDefault(person: Person){
-        with(binding){
+    private fun setPersonDefault(person: Person) {
+        with(binding) {
             editTextName.setText(person.firstName)
             editTextSurname.setText(person.name)
             editTextBirthdate.setText(Person.dateFormatter.format(person.birthDay.time))
@@ -84,26 +93,27 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setGroup() {
-        with(binding) {
-            when (radioGroupOccupation.checkedRadioButtonId) {
-                radioButtonStudent.id -> {
+    private fun setGroupVisibility(buttonId: Int){
+        with(binding){
+            when(buttonId){
+                radioButtonStudent.id ->{
                     groupStudent.visibility = VISIBLE
                     groupWorker.visibility = GONE
-                    setStudentDefault()
                 }
 
                 radioButtonWorker.id -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = VISIBLE
-                    setWorkerDefault()
                 }
-
                 else -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = GONE
                 }
             }
         }
+    }
+
+    private fun updateUI() {
+        //TODO
     }
 }
