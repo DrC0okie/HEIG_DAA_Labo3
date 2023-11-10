@@ -9,6 +9,7 @@
     <string name="main_base_occupation_title">Occupation</string>
     <string name="main_base_occupation_student">Etudiant</string>
     <string name="main_base_occupation_worker">Employé</string>
+    <string name="main_base_occupation_error">Veuillez sélectionner une occupation</string>
 
     <string-array name="nationalities" translatable="false">
         <item>@string/ch</item>

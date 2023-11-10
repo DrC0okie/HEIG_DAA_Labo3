@@ -9,6 +9,7 @@ import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Spinner
+import android.widget.Toast
 import ch.heigvd.daa.labo3.databinding.ActivityMainBinding
 import ch.heigvd.daa.labo3.model.Person
 import ch.heigvd.daa.labo3.model.Student
@@ -46,13 +47,18 @@ class MainActivity : AppCompatActivity() {
             }
 
             buttonSave.setOnClickListener {
-                Log.i(
-                    "", if (radioButtonStudent.isChecked) {
-                        createStudentFromUI()
-                    } else {
-                        createWorkerFromUI()
-                    }.toString()
-                )
+                if (binding.radioGroupOccupation.checkedRadioButtonId == RadioButton.NO_ID) {
+                    val message = resources.getString(R.string.main_base_occupation_error)
+                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.i(
+                        "", if (radioButtonStudent.isChecked) {
+                            createStudentFromUI()
+                        } else {
+                            createWorkerFromUI()
+                        }.toString()
+                    )
+                }
             }
 
             radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
@@ -121,6 +127,7 @@ class MainActivity : AppCompatActivity() {
                     editTextStudentSchool.setText(person.university)
                     editTextStudentGraduationyear.setText(person.graduationYear.toString())
                 }
+
                 is Worker -> {
                     setSpinnerValue(spinnerWorkerSector, person.sector)
                     editTextWorkerCompany.setText(person.company)
@@ -144,11 +151,13 @@ class MainActivity : AppCompatActivity() {
                     groupWorker.visibility = GONE
                     setPersonDefaults(Person.exampleStudent)
                 }
+
                 radioButtonWorker.id -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = VISIBLE
                     setPersonDefaults(Person.exampleWorker)
                 }
+
                 else -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = GONE
