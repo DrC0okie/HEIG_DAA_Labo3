@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         val constraintsBuilder = CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
 
         val datePicker = MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Select date")
+            .setTitleText(resources.getString(R.string.main_base_birthdate_dialog_title))
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
             .setCalendarConstraints(constraintsBuilder.build())
             .build()
