@@ -56,7 +56,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
-                val test = radioGroupOccupation.checkedRadioButtonId
                 setGroupVisibility(checkedId)
             }
         }
