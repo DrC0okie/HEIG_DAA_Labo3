@@ -7,7 +7,6 @@ import ch.heigvd.daa.labo3.model.Person
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
-import android.content.Context
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -15,8 +14,7 @@ import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.Toast
-import ch.heigvd.daa.labo3.databinding.ActivityMainBinding
-import ch.heigvd.daa.labo3.model.Person
+import ch.heigvd.daa.labo3.adapters.CustomSpinnerAdapter
 import ch.heigvd.daa.labo3.model.Student
 import ch.heigvd.daa.labo3.model.Worker
 import java.util.Date
@@ -26,49 +24,40 @@ import java.util.Calendar
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private lateinit var datePicker: MaterialDatePicker<Long>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        setClickListeners()
+
+        initDatePicker()
+        initClickListeners()
         initUI()
     }
 
-    /**
-     * Cette fonction est utilisée pour le choix de la date de naissance
-     */
-    fun datePicker()
-    {
-        // Bloquer les dates dans le futur pour les dates de naissance
-        val constraintsBuilder = CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
+    private fun initDatePicker() {
+        //Forbid dates in the future
+        val dateConstraints =
+            CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
 
-        val datePicker = MaterialDatePicker.Builder.datePicker()
+        //Create the datePicker
+        datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(resources.getString(R.string.main_base_birthdate_dialog_title))
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .setCalendarConstraints(constraintsBuilder.build())
+            .setCalendarConstraints(dateConstraints.build())
             .build()
-
-        datePicker.show(supportFragmentManager, "DatePicker")
-
-        // Evénement quand on clique sur le bouton OK
-        datePicker.addOnPositiveButtonClickListener() {
-            // Formattage de la date
-            val date = Person.dateFormatter.format(Date(it))
-            binding.editTextBirthdate.setText(date)
-
-        }
     }
 
-    private fun setClickListeners() {
+    private fun initClickListeners() {
 
         with(binding) {
             imageButtonCake.setOnClickListener {
-                datePicker();
+                datePicker.show(supportFragmentManager, "DatePicker")
             }
 
             editTextBirthdate.setOnClickListener {
-                datePicker();
+                datePicker.show(supportFragmentManager, "DatePicker")
             }
 
             buttonCancel.setOnClickListener {
@@ -93,14 +82,10 @@ class MainActivity : AppCompatActivity() {
             radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
                 setGroupVisibility(checkedId)
             }
-        }
-    }
 
-    private fun getSpinnerAdapter(resource: Int, context: Context): ArrayAdapter<CharSequence> {
-        return ArrayAdapter.createFromResource(
-            context, resource, android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            datePicker.addOnPositiveButtonClickListener {
+                binding.editTextBirthdate.setText(Person.dateFormatter.format(Date(it)))
+            }
         }
     }
 
@@ -168,8 +153,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setSpinnerValue(spinner: Spinner, value: String) {
         val adapter = spinner.adapter as ArrayAdapter<CharSequence>
-        val position = adapter.getPosition(value)
-        spinner.setSelection(position)
+        spinner.setSelection(adapter.getPosition(value))
     }
 
     private fun setGroupVisibility(buttonId: Int) {
@@ -195,14 +179,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun initSpinners() {
+
+        binding.spinnerNationality.adapter = CustomSpinnerAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            listOf(getString(R.string.nationality_empty)) + resources.getStringArray(R.array.nationalities)
+        ).also { it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+
+        binding.spinnerWorkerSector.adapter = ArrayAdapter.createFromResource(
+            this, R.array.sectors, android.R.layout.simple_spinner_item
+        ).also { a -> a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item) }
+    }
+
     private fun initUI() {
         with(binding) {
             radioGroupOccupation.clearCheck()
-            spinnerNationality.adapter = getSpinnerAdapter(R.array.nationalities, this@MainActivity)
-            spinnerWorkerSector.adapter = getSpinnerAdapter(R.array.sectors, this@MainActivity)
+            initSpinners()
+            spinnerNationality.setSelection(0) // Set to "Sélectionner"
             editTextBirthdate.setText(Person.dateFormatter.format(Date.from(Instant.now())))
         }
-        setGroupVisibility(RadioButton.NO_ID)
     }
 
     private fun resetUI() {
@@ -222,8 +218,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-
-
-
-
