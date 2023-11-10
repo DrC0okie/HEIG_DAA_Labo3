@@ -27,12 +27,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-
-        binding.imageButtonCake.setOnClickListener() {
-            datePicker();
-        }
-
-
         setClickListeners()
         initUI()
     }
@@ -66,11 +60,11 @@ class MainActivity : AppCompatActivity() {
 
         with(binding) {
             imageButtonCake.setOnClickListener {
-                //TODO : Material Datepicker (make a function)
+                datePicker();
             }
 
             editTextBirthdate.setOnClickListener {
-                //TODO : call the same function as the imageButtonCake onClickListener
+                datePicker();
             }
 
             buttonCancel.setOnClickListener {
