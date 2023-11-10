@@ -93,6 +93,13 @@
         android:src="@drawable/cake"/>
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Date Picker"
+        android:id="@+id/datePicker"
+    />
+    <TextView
         android:id="@+id/text_view_nationality"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
