@@ -8,7 +8,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.RadioGroup
+import android.widget.Spinner
 import ch.heigvd.daa.labo3.databinding.ActivityMainBinding
 import ch.heigvd.daa.labo3.model.Person
 import ch.heigvd.daa.labo3.model.Student
@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                 editTextSurname.text.toString(),
                 editTextName.text.toString(),
                 getCalendarFromUI(),
-                "",//TODO retrieve value from spinner
+                spinnerNationality.selectedItem.toString(),
                 editTextStudentSchool.text.toString(),
                 editTextStudentGraduationyear.text.toString().toInt(),
                 editTextEmail.text.toString(),
@@ -97,9 +97,9 @@ class MainActivity : AppCompatActivity() {
                 editTextSurname.text.toString(),
                 editTextName.text.toString(),
                 getCalendarFromUI(),
-                "",//TODO retrieve value from spinner
+                spinnerNationality.selectedItem.toString(),
                 editTextWorkerCompany.text.toString(),
-                "",//TODO retieve value from spinner
+                spinnerWorkerSector.selectedItem.toString(),
                 editTextWorkerExperience.text.toString().toInt(),
                 editTextEmail.text.toString(),
                 editTextComments.text.toString()
@@ -114,20 +114,26 @@ class MainActivity : AppCompatActivity() {
             editTextBirthdate.setText(Person.dateFormatter.format(person.birthDay.time))
             editTextEmail.setText(person.email)
             editTextComments.setText(person.remark)
+            setSpinnerValue(spinnerNationality, person.nationality)
 
             when (person) {
                 is Student -> {
                     editTextStudentSchool.setText(person.university)
                     editTextStudentGraduationyear.setText(person.graduationYear.toString())
                 }
-
                 is Worker -> {
-                    // TODO spinnerWorkerSector
+                    setSpinnerValue(spinnerWorkerSector, person.sector)
                     editTextWorkerCompany.setText(person.company)
                     editTextWorkerExperience.setText(person.experienceYear.toString())
                 }
             }
         }
+    }
+
+    private fun setSpinnerValue(spinner: Spinner, value: String) {
+        val adapter = spinner.adapter as ArrayAdapter<CharSequence>
+        val position = adapter.getPosition(value)
+        spinner.setSelection(position)
     }
 
     private fun setGroupVisibility(buttonId: Int) {
@@ -163,6 +169,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetUI() {
         with(binding) {
+            radioGroupOccupation.clearCheck()
             editTextName.setText("")
             editTextSurname.setText("")
             editTextBirthdate.setText("")
@@ -174,7 +181,6 @@ class MainActivity : AppCompatActivity() {
             editTextWorkerExperience.setText("")
             spinnerWorkerSector.setSelection(0)
             spinnerNationality.setSelection(0)
-            radioGroupOccupation.clearCheck()
         }
     }
 }
