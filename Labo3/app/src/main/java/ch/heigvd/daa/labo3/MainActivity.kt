@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import ch.heigvd.daa.labo3.databinding.ActivityMainBinding
 import ch.heigvd.daa.labo3.model.Person
 import ch.heigvd.daa.labo3.model.Student
@@ -18,7 +20,6 @@ import java.util.Date
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var person: Person
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -26,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setClickListeners()
-        binding.radioGroupOccupation.clearCheck()
         initUI()
     }
 
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             buttonCancel.setOnClickListener {
-                //TODO
+                resetUI()
             }
 
             buttonSave.setOnClickListener {
@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
+                val test = radioGroupOccupation.checkedRadioButtonId
                 setGroupVisibility(checkedId)
             }
         }
@@ -138,13 +139,11 @@ class MainActivity : AppCompatActivity() {
                     groupWorker.visibility = GONE
                     setPersonDefaults(Person.exampleStudent)
                 }
-
                 radioButtonWorker.id -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = VISIBLE
                     setPersonDefaults(Person.exampleWorker)
                 }
-
                 else -> {
                     groupStudent.visibility = GONE
                     groupWorker.visibility = GONE
@@ -154,11 +153,29 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        setGroupVisibility(0)
         with(binding) {
+            radioGroupOccupation.clearCheck()
             spinnerNationality.adapter = getSpinnerAdapter(R.array.nationalities, this@MainActivity)
             spinnerWorkerSector.adapter = getSpinnerAdapter(R.array.sectors, this@MainActivity)
             editTextBirthdate.setText(Person.dateFormatter.format(Date.from(Instant.now())))
+        }
+        setGroupVisibility(RadioButton.NO_ID)
+    }
+
+    private fun resetUI() {
+        with(binding) {
+            editTextName.setText("")
+            editTextSurname.setText("")
+            editTextBirthdate.setText("")
+            editTextEmail.setText("")
+            editTextComments.setText("")
+            editTextStudentSchool.setText("")
+            editTextStudentGraduationyear.setText("")
+            editTextWorkerCompany.setText("")
+            editTextWorkerExperience.setText("")
+            spinnerWorkerSector.setSelection(0)
+            spinnerNationality.setSelection(0)
+            radioGroupOccupation.clearCheck()
         }
     }
 }
