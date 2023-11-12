@@ -46,15 +46,17 @@ class MainActivity : AppCompatActivity() {
      * Initializes the date picker with constraints to prevent selection of future dates.
      */
     private fun initDatePicker() {
-        //Forbid dates in the future
-        val dateConstraints =
-            CalendarConstraints.Builder().setValidator(DateValidatorPointBackward.now())
 
-        //Create the datePicker
+        //Forbid dates in the future and dates less than 110 years in the past
+        val dateConstraints = CalendarConstraints.Builder()
+            .setValidator(DateValidatorPointBackward.now())
+            .setStart(Calendar.getInstance().also { it.add(Calendar.YEAR, -110) }.timeInMillis)
+            .build()
+
         datePicker = MaterialDatePicker.Builder.datePicker()
             .setTitleText(resources.getString(R.string.main_base_birthdate_dialog_title))
             .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .setCalendarConstraints(dateConstraints.build())
+            .setCalendarConstraints(dateConstraints)
             .build()
     }
 
@@ -173,6 +175,7 @@ class MainActivity : AppCompatActivity() {
                     editTextStudentSchool.setText(person.university)
                     editTextStudentGraduationyear.setText(person.graduationYear.toString())
                 }
+
                 is Worker -> {
                     setSpinnerValue(spinnerWorkerSector, person.sector)
                     editTextWorkerCompany.setText(person.company)
@@ -212,10 +215,12 @@ class MainActivity : AppCompatActivity() {
                     setGroupVisibility(true, false)
                     setPersonDefaults(Person.exampleStudent)
                 }
+
                 radioButtonWorker.id -> {
                     setGroupVisibility(false, true)
                     setPersonDefaults(Person.exampleWorker)
                 }
+
                 else -> {
                     setGroupVisibility(false, false)
                     spinnerNationality.setSelection(0) // Set to "Sélectionner"
