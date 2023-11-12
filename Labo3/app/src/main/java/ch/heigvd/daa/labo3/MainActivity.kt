@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.Spinner
 import android.widget.Toast
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
-                setGroupVisibility(checkedId)
+                handleRadioButtonChange(checkedId)
             }
 
             datePicker.addOnPositiveButtonClickListener {
@@ -172,7 +173,6 @@ class MainActivity : AppCompatActivity() {
                     editTextStudentSchool.setText(person.university)
                     editTextStudentGraduationyear.setText(person.graduationYear.toString())
                 }
-
                 is Worker -> {
                     setSpinnerValue(spinnerWorkerSector, person.sector)
                     editTextWorkerCompany.setText(person.company)
@@ -194,27 +194,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * Set the group UI group visibility state based on bool inputs
+     */
+    private fun setGroupVisibility(studentVisible: Boolean, workerVisible: Boolean) {
+        binding.groupStudent.visibility = if (studentVisible) VISIBLE else GONE
+        binding.groupWorker.visibility = if (workerVisible) VISIBLE else GONE
+    }
+
+    /**
      * Sets the visibility of student and worker groups based on the selected occupation.
      * @param buttonId The id of the selected radio button.
      */
-    private fun setGroupVisibility(buttonId: Int) {
+    private fun handleRadioButtonChange(buttonId: Int) {
         with(binding) {
             when (buttonId) {
                 radioButtonStudent.id -> {
-                    groupStudent.visibility = VISIBLE
-                    groupWorker.visibility = GONE
+                    setGroupVisibility(true, false)
                     setPersonDefaults(Person.exampleStudent)
                 }
-
                 radioButtonWorker.id -> {
-                    groupStudent.visibility = GONE
-                    groupWorker.visibility = VISIBLE
+                    setGroupVisibility(false, true)
                     setPersonDefaults(Person.exampleWorker)
                 }
-
                 else -> {
-                    groupStudent.visibility = GONE
-                    groupWorker.visibility = GONE
+                    setGroupVisibility(false, false)
                     spinnerNationality.setSelection(0) // Set to "Sélectionner"
                     editTextBirthdate.setText(Person.dateFormatter.format(Date.from(Instant.now())))
                 }
@@ -227,7 +230,6 @@ class MainActivity : AppCompatActivity() {
      * Sets up the spinners for nationality and worker sector with data from resources.
      */
     private fun initSpinners() {
-
         binding.spinnerNationality.adapter = CustomSpinnerAdapter(
             this,
             android.R.layout.simple_spinner_item,
@@ -240,23 +242,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * Set the text of all edit texts to an empty string
+     */
+    private fun clearEditTexts(vararg editTexts: EditText) {
+        editTexts.forEach { it.setText("") }
+    }
+
+    /**
+     * Set the selection of all spinners to 0
+     */
+    private fun clearSpinners(vararg spinners: Spinner) {
+        spinners.forEach { it.setSelection(0) }
+    }
+
+    /**
      * Resets the UI components to their default state.
      */
     private fun resetUI() {
         with(binding) {
-
-            //Will call setOnCheckedChangeListener
             radioGroupOccupation.clearCheck()
-            editTextName.setText("")
-            editTextSurname.setText("")
-            editTextEmail.setText("")
-            editTextComments.setText("")
-            editTextStudentSchool.setText("")
-            editTextStudentGraduationyear.setText("")
-            editTextWorkerCompany.setText("")
-            editTextWorkerExperience.setText("")
-            spinnerWorkerSector.setSelection(0)
-            spinnerNationality.setSelection(0)
+            clearEditTexts(
+                editTextName, editTextSurname, editTextEmail, editTextComments,
+                editTextStudentSchool, editTextStudentGraduationyear,
+                editTextWorkerCompany, editTextWorkerExperience
+            )
+            clearSpinners(spinnerWorkerSector, spinnerNationality)
         }
     }
 }
