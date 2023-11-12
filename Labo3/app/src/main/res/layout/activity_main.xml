@@ -125,7 +125,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/guideline"
             app:layout_constraintTop_toBottomOf="@id/edit_text_birthdate" />
@@ -234,8 +233,8 @@
             android:id="@+id/group_student"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:visibility="gone"
-            app:constraint_referenced_ids="text_view_specific_data_student,text_view_student_school,edit_text_student_school,text_view_student_graduationyear,edit_text_student_graduationyear" />
+            app:constraint_referenced_ids="text_view_specific_data_student,text_view_student_school,edit_text_student_school,text_view_student_graduationyear,edit_text_student_graduationyear"
+            tools:visibility="gone" />
 
         <TextView
             android:id="@+id/text_view_specific_data_worker"
@@ -317,8 +316,8 @@
             android:id="@+id/group_worker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:visibility="visible"
-            app:constraint_referenced_ids="text_view_specific_data_worker, text_view_worker_company, edit_text_worker_company, text_view_worker_sector, spinner_worker_sector, text_view_worker_experience, edit_text_worker_experience" />
+            app:constraint_referenced_ids="text_view_specific_data_worker, text_view_worker_company, edit_text_worker_company, text_view_worker_sector, spinner_worker_sector, text_view_worker_experience, edit_text_worker_experience"
+            tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
@@ -335,7 +334,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/barrier" />
-
 
         <TextView
             android:id="@+id/text_view_additional_data"
@@ -392,7 +390,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_comments" />
-
 
         <Button
             android:id="@+id/button_cancel"
