@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Initializes click listeners for the main UI components
+     * Initializes click listeners for the main form components
      */
     private fun initClickListeners() {
 
@@ -75,21 +75,16 @@ class MainActivity : AppCompatActivity() {
             }
 
             buttonCancel.setOnClickListener {
-                resetUI()
+                resetForm()
             }
 
             buttonSave.setOnClickListener {
-                if (radioGroupOccupation.checkedRadioButtonId == RadioButton.NO_ID) {
-                    //Display an error text in a toast
-                    val message = resources.getString(R.string.main_base_occupation_error)
-                    Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-                } else {
-                    //Logs the created person info
+                if (validateInputs()) {
                     Log.i(
-                        "", if (radioButtonStudent.isChecked) {
-                            createStudentFromUI()
+                        MainActivity::class.java.simpleName, if (radioButtonStudent.isChecked) {
+                            createStudentFromForm()
                         } else {
-                            createWorkerFromUI()
+                            createWorkerFromForm()
                         }.toString()
                     )
                 }
@@ -97,6 +92,7 @@ class MainActivity : AppCompatActivity() {
 
             radioGroupOccupation.setOnCheckedChangeListener { _, checkedId ->
                 handleRadioButtonChange(checkedId)
+                radioButtonWorker.error = null
             }
 
             datePicker.addOnPositiveButtonClickListener {
@@ -106,10 +102,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Retrieves a Calendar instance based on the user input from the UI.
+     * Retrieves a Calendar instance based on the user input from the form.
      * @return Calendar instance representing the user-selected date or current date if parsing fails.
      */
-    private fun getCalendarFromUI(): Calendar {
+    private fun getCalendarFromForm(): Calendar {
         return Calendar.getInstance().also {
             it.time =
                 Person.dateFormatter.parse(binding.editTextBirthdate.text.toString()) ?: Date.from(
@@ -119,15 +115,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Creates a Student object from the UI inputs.
+     * Creates a Student object from the form inputs.
      * @return Student object populated with user inputs.
      */
-    private fun createStudentFromUI(): Student {
+    private fun createStudentFromForm(): Student {
         with(binding) {
             return Student(
                 editTextSurname.text.toString(),
                 editTextName.text.toString(),
-                getCalendarFromUI(),
+                getCalendarFromForm(),
                 spinnerNationality.selectedItem.toString(),
                 editTextStudentSchool.text.toString(),
                 editTextStudentGraduationyear.text.toString().toInt(),
@@ -138,15 +134,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Creates a Worker object from the UI inputs.
+     * Creates a Worker object from the form inputs.
      * @return Worker object populated with user inputs.
      */
-    private fun createWorkerFromUI(): Worker {
+    private fun createWorkerFromForm(): Worker {
         with(binding) {
             return Worker(
                 editTextSurname.text.toString(),
                 editTextName.text.toString(),
-                getCalendarFromUI(),
+                getCalendarFromForm(),
                 spinnerNationality.selectedItem.toString(),
                 editTextWorkerCompany.text.toString(),
                 spinnerWorkerSector.selectedItem.toString(),
@@ -158,8 +154,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Sets default values in the UI based on the provided Person object.
-     * @param person Person instance (Student or Worker) whose data is used to set UI defaults.
+     * Sets default values in the form based on the provided Person object.
+     * @param person Person instance (Student or Worker) whose data is used to set form defaults.
      */
     private fun setPersonDefaults(person: Person) {
         with(binding) {
@@ -197,7 +193,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Set the group UI group visibility state based on bool inputs
+     * Set the form group visibility state based on bool inputs
      */
     private fun setGroupVisibility(studentVisible: Boolean, workerVisible: Boolean) {
         binding.groupStudent.visibility = if (studentVisible) VISIBLE else GONE
@@ -261,9 +257,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Resets the UI components to their default state.
+     * Resets the form components to their default state.
      */
-    private fun resetUI() {
+    private fun resetForm() {
         with(binding) {
             radioGroupOccupation.clearCheck()
             clearEditTexts(
@@ -273,5 +269,49 @@ class MainActivity : AppCompatActivity() {
             )
             clearSpinners(spinnerWorkerSector, spinnerNationality)
         }
+    }
+
+    /**
+     * Checks if all the given EditText have a value
+     * @return the first null or empty EditText
+     */
+    private fun findFirstEmptyEditText(vararg editTexts: EditText): EditText? {
+        return editTexts.find { it.text.toString().trim().isEmpty() }
+    }
+
+    /**
+     * Validates user inputs in the form by checking whether all fields in the form are filled.
+     * @return Boolean indicating whether the validation passed (true) or failed (false).
+     */
+    private fun validateInputs(): Boolean {
+        with(binding) {
+            if (radioGroupOccupation.checkedRadioButtonId == RadioButton.NO_ID) {
+                //Show an error on the last radio button as indication
+                radioButtonWorker.error = resources.getString(R.string.error_occupation_empty)
+                showToast(resources.getString(R.string.error_occupation_empty))
+                return false
+            }
+
+            val emptyEditText = findFirstEmptyEditText(
+                editTextName, editTextSurname, editTextEmail, editTextBirthdate
+            ) ?: if (radioButtonStudent.isChecked) {
+                findFirstEmptyEditText(editTextStudentSchool, editTextStudentGraduationyear)
+            } else {
+                findFirstEmptyEditText(editTextWorkerCompany, editTextWorkerExperience)
+            }
+
+            // Shows an error on the first empty edit text
+            if (emptyEditText != null) {
+                emptyEditText.error = resources.getString(R.string.error_field_empty)
+                return false
+            }
+
+            showToast(resources.getString(R.string.success_save))
+            return true
+        }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this@MainActivity, message, Toast.LENGTH_LONG).show()
     }
 }

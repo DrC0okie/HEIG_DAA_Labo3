@@ -9,7 +9,10 @@
     <string name="main_base_occupation_title">Occupation</string>
     <string name="main_base_occupation_student">Etudiant</string>
     <string name="main_base_occupation_worker">Employé</string>
-    <string name="main_base_occupation_error">Veuillez sélectionner une occupation</string>
+    <string name="error_occupation_empty">Veuillez sélectionner une occupation</string>
+    <string name="error_field_empty">Ce champ est requis</string>
+    <string name="success_save">Informations enregistrées</string>
+
 
     <string-array name="nationalities" translatable="false">
         <item>@string/ch</item>

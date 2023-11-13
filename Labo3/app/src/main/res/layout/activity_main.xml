@@ -163,15 +163,6 @@
                 android:text="@string/main_base_occupation_worker" />
         </RadioGroup>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_basic_data"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/radio_group_occupation" />
-
         <TextView
             android:id="@+id/text_view_specific_data_student"
             android:layout_width="0dp"
@@ -182,7 +173,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_basic_data"
+            app:layout_constraintTop_toBottomOf="@id/radio_group_occupation"
             tools:text="@string/main_specific_students_title" />
 
         <TextView
@@ -247,7 +238,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_basic_data" />
+            app:layout_constraintTop_toBottomOf="@id/radio_group_occupation" />
 
         <TextView
             android:id="@+id/text_view_worker_company"
@@ -317,7 +308,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:constraint_referenced_ids="text_view_specific_data_worker, text_view_worker_company, edit_text_worker_company, text_view_worker_sector, spinner_worker_sector, text_view_worker_experience, edit_text_worker_experience"
-            tools:visibility="visible" />
+            tools:visibility="gone" />
 
         <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier"
@@ -325,15 +316,6 @@
             android:layout_height="wrap_content"
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="edit_text_worker_experience, edit_text_student_graduationyear" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider_specific_data"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/barrier" />
 
         <TextView
             android:id="@+id/text_view_additional_data"
@@ -345,7 +327,7 @@
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider_specific_data" />
+            app:layout_constraintTop_toBottomOf="@id/barrier" />
 
         <TextView
             android:id="@+id/text_view_email"
